@@ -1,0 +1,294 @@
+1 clc
+2 clearvars
+3 syms x y L
+4 f = input('Enter the function f(x,y): ');
+5 g = input('Enter the constraint function g(x,y): ');
+6 F = f + L*g;
+7 gradF = jacobian(F,[x,y]);
+8 [L,x1,y1] = solve(g,gradF(1),gradF(2),'Real',true); % Solving only for Real x and y
+9 x1 = double(x1); y1 = double(y1);
+10 xmx = max(x1); xmn = min(x1); % Finding max and min of x-coordinates for plot range
+11 ymx = max(y1); ymn = min(y1); % Finding max and min of y-coordinates for plot range
+12 range = [xmn−3 xmx+3 ymn−3 ymx+3]; % Setting plot range
+13 ezmesh(f,range);hold on; grid on;
+14 h = ezplot(g,range); set(h,'LineWidth',2);
+15 tmp = get(h,'contourMatrix');
+16 xdt = tmp(1,2:end); % Avoiding first x-data point
+17 ydt = tmp(2,2:end); % Avoiding first y-data point
+18 zdt = double(subs(f,{x,y},{xdt,ydt}));
+19 plot3(xdt,ydt,zdt,'−r','LineWidth',2);axis(range);
+20 for i = 1:numel(x1)
+21 G(i) = subs(f,[x,y],[x1(i),y1(i)])
+22 plot3(x1(i),y1(i),G(i),'*k','MarkerSize',20);
+23 end
+24 title('Constrained Maxima/Minima')
+
+
+
+clc
+clear
+syms x y
+f(x,y)=input('Enter the function f(x,y):');
+p=diff(f,x); q=diff(f,y);
+[ax,ay]=solve(p,q);
+ax=double(ax);ay=double(ay);
+r=diff(p,x); s=diff(p,y); t=diff(q,y);D=r*t-s^2;
+figure
+fsurf(f);
+legstr={'Function Plot'};% for Legend
+for i=1:size(ax)
+T1=D(ax(i),ay(i));
+T2=r(ax(i),ay(i));
+T3=f(ax(i),ay(i));
+if(double(T1)==0)
+sprintf('At (%f,%f) further investigation is required',ax(i),ay(i))
+legstr=[legstr,{'Case of Further investigation'}];
+mkr='ko';
+elseif (double(T1)<0)
+sprintf('The point (%f,%f) is a saddle point', ax(i),ay(i))
+legstr=[legstr,{'Saddle Point'}]; % updating Legend
+mkr='bv'; % marker
+else
+if (double(T2) < 0)
+sprintf('The maximum value of the function is f(%f,%f)=%f', ax(i),ay(i), T3)
+legstr=[legstr,{'Maximum value of the function'}];% updating Legend
+mkr='g+';% marker
+else
+sprintf('The minimum value of the function is f(%f,%f)=%f', ax(i),ay(i), T3)
+legstr=[legstr,{'Minimum value of the function'}];% updating Legend
+mkr='r*'; % marker
+end
+end
+hold on
+plot3(ax(i),ay(i),T3,mkr,'Linewidth',4);
+end
+legend(legstr,'Location','Best');
+
+
+
+
+clc
+clear all
+syms r a b
+r= input('Enter the radius of the circle')
+a= input('Enter the x coordinate of the center')
+b= input('Enter the y coordinates of the center')
+t = linspace(0, 2*pi, 100);
+x = a+r*cos(t);
+y = b+r*sin(t);
+axis equal
+title('(x-a)^2+(y-b)^2=r^2')
+plot(x, y)
+xlabel('x-Coordinate')
+ylabel('y-Coordinate')
+title('(x-a)^2+(y-b)^2=r^2')
+
+
+
+(2) Multiple plots using Hold on Matlab Code:
+clc
+clear all
+x = linspace(0, 1, 100);
+plot(x, x.^2,'r', 'LineWidth',2.0)
+hold on
+plot(x, cos(x),'g', 'LineWidth',2.0)
+hold on
+plot(x, sin(x),'b', 'LineWidth',2.0)
+hold on
+plot(x, exp(x),'c', 'LineWidth',2.0)
+legend('x^2', 'cos(x)' , 'sin(x)' , 'e^{x}')
+
+
+
+(3) Multiple plots without command “hold on" Matlab Code:
+clc
+clear all
+x = linspace(0, 1, 200);
+plot(x,sin(x),x,cos(x),x,x.^3,x,tan(x),'LineWidth',2.0)
+legend('sin(x)','cos(x)','x^3','tan(x)')
+
+
+
+(4) Multiple graphs in a Figure window through Matlab command -subplot
+clc
+clear all
+x=0:0.1:2*pi;
+subplot(2,2,1)
+plot(x,sin(x));
+title('sin(x)')
+subplot(2,2,2)
+plot(x,cos(x),'r-*');
+title('cos(x)')
+subplot(2,2,3)
+plot(x,exp(-x),'go')
+title('e^{-x}')
+subplot(2,2,4);
+plot(x,sin(3*x),'ms')
+title('sin(3x)')
+
+
+
+(5) Graph of the curve using “ezplot " Matlab Code:
+clc
+clear all
+syms x % Declaring the parameters as a symbolic object
+f=sin(2*x)+cos(3*x)
+figure(1)
+ezplot(f)
+figure(2)
+ezplot(f,[0,3])
+
+
+(6) Graph of a curve and its tangent line in the neighbourhood D of a point.
+syms x
+y=input('enter the function f in terms of x:')
+x1 = input('Enter x value at which tangent : ');
+D=[x1-2 x1+2] % Region about x1 (or Neighbourhood of x1)
+ezplot(y,D) % graph of the curve in D
+hold on
+% Equation of the tgt line passing through x1.
+yd = diff(y,x); % Differentiation in MATLAB
+slope = subs(yd,x,x1); % Finding the slope at x1
+y1 = subs(y,x,x1); % Finding the value of the function at the given point
+plot(x1,y1,'ko') % plot the point
+BMAT101P – CALCULUS MATLAB 01
+SPT Page 3
+Tgt_line = slope*(x-x1)+y1 % Tangent Line Equation at the given point
+h = ezplot(Tgt_line,D); % Plotting the Tangent Line
+set(h,'color','r')
+
+
+
+(7)To Plot the function and its derivatives Matlab Code:
+clc
+clear all
+syms x real
+f= input('Enter the function f(x):');
+%Example, Try f=x^3-2*x+4 & x^3*(x-5)^2
+fx= diff(f,x)
+fxx= diff(fx,x)
+% determine the critical points
+D = [0, 5];
+l=ezplot(f,D)
+set(l,'color','b');
+hold on
+h=ezplot(fx,D);
+set(h,'color','r');
+e=ezplot(fxx,D);
+set(e,'color','g');
+legend('f','f_x','f_x_x')
+legend('Location','northeastoutside')
+
+
+(8)To find the maxima and minima of the single variable function and
+visualize it.
+clear
+clc
+syms x real
+f= input('Enter the function f(x):'); %Example, Try f=x^3-2*x+4 & x^3*(x-5)^2
+fx= diff(f,x);
+fxx= diff(fx,x);
+c = solve(fx)
+c=double(c);
+ for i = 1:length(c)
+ T1 = subs(fxx, x ,c(i) )
+ T1=double(T1);
+ T3= subs(f, x, c(i));
+ T3=double(T3);
+ if (T1==0)
+ sprintf('The inflection point is x = %d.',c(i))
+ else
+ if (T1 < 0)
+ sprintf('The maximum point x is %d', c(i))
+ sprintf('and the maximum value of the function is %d.', T3)
+ else
+ sprintf('The minimum point x is %d', c(i))
+ sprintf('and the minimum value of the function is %d', T3)
+ end
+ end
+ cmin = min(c);
+cmax = max(c);
+D = [cmin-2, cmax+2];
+ezplot(f,D)
+hold on
+ plot(c(i), T3, 'g*', 'markersize', 15);
+end
+
+
+Definite Integrals and its applications
+(9)To find the area of the regions enclosed by curves and visualize it.
+clc
+clear
+syms x
+y1=input('ENTER the upper curve as a function of x : ');
+y2=input('ENTER the lower curve as a function of x : ');
+% Try the curves : y=x and y=x^2-2*x;
+t=solve(y1-y2)
+t=double(t);
+A=int(y1-y2,t(1),t(2))
+D=[t(1)-0.2 t(2)+0.2];
+ez1=ezplot(y1,D);
+set(ez1,'color','r')
+hold on
+ez2=ezplot(y2,D);
+set(ez2,'color','g')
+xv = linspace(t(1),t(2));
+y1v =subs(y1,x,xv);
+y2v = subs(y2,x,xv);
+x = [xv,xv];
+y = [y1v,y2v];
+fill(x,y,'b')
+
+
+(10) Volume of the Solid of Revolution
+clc
+clear all
+syms x
+f = input('Enter the function: ');
+fL = input('Enter the interval on which the function is defined: ');
+yr = input('Enter the axis of rotation y = c (enter only c value): ');
+iL = input('Enter the integration limits: ');
+Volume = pi*int((f-yr)^2,iL(1),iL(2));
+disp(['Volume is: ', num2str(double(Volume))])
+fx = inline(vectorize(f));
+xvals = linspace(fL(1),fL(2),201);
+xvalsr = fliplr(xvals);
+xivals = linspace(iL(1),iL(2),201);
+xivalsr = fliplr(xivals);
+xlim = [fL(1) fL(2)+0.5];
+ylim = fx(xlim);
+figure('Position',[100 200 560 420])
+subplot(2,1,1)
+hold on;
+plot(xvals,fx(xvals),'-b','LineWidth',2);
+fill([xvals xvalsr],[fx(xvals) ones(size(xvalsr))*yr],[0.8 0.8 0.8],'FaceAlpha',0.8)
+plot([fL(1) fL(2)],[yr yr],'-r','LineWidth',2);
+legend('Function Plot','Filled Region','Axis of Rotation','Location','Best');
+title('Function y=f(x) and Region');
+set(gca,'XLim',xlim)
+xlabel('x-axis');
+ylabel('y-axis');
+subplot(2,1,2)
+hold on;
+plot(xivals,fx(xivals),'-b','LineWidth',2);
+fill([xivals xivalsr],[fx(xivals) ones(size(xivalsr))*yr],[0.8 0.8 0.8],'FaceAlpha',0.8)
+BMAT101P – CALCULUS MATLAB 01
+SPT Page 6
+fill([xivals xivalsr], [ones(size(xivals))*yr -fx(xivalsr)+2*yr], [1 0.8 0.8],
+'FaceAlpha', 0.8)
+plot(xivals, -fx(xivals)+2*yr, '-m','LineWidth',2);
+plot([fL(1) fL(2)],[yr yr],'-r','LineWidth',2);
+title('Rotated Region in xy-Plane');
+set(gca,'XLim',xlim)
+xlabel('x-axis');
+ylabel('y-axis');
+[X,Y,Z] = cylinder(fx(xivals)- yr,100);
+figure('Position',[700 200 560 420])
+Z = iL(1) + Z.*(iL(2)-iL(1));
+surf(Z,Y+yr,X+yr,'EdgeColor','none','FaceColor','flat','FaceAlpha',0.6);
+hold on;
+plot3([iL(1) iL(2)],[yr yr],[yr yr],'-r','LineWidth',2);
+xlabel('X-axis');
+ylabel('Y-axis');
+zlabel('Z-axis');
+view(22,11);
