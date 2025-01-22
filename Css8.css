@@ -1,0 +1,49 @@
+body {
+    font-family: Arial, sans-serif;
+    padding: 20px;
+    background-color: green;
+    color: white;
+}
+
+.container {
+    display: flex;
+    flex-direction: column;
+}
+
+.sidebar {
+    width: 200px;
+    background-color: black;
+    padding: 20px 10px;
+}
+
+.sidebar h2 {
+    margin-top: 0;
+}
+
+.sidebar ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+.sidebar ul li {
+    margin: 10px 0;
+}
+
+.sidebar ul li a {
+    text-decoration: none;
+    color: white;
+}
+
+.main-content {
+    flex: 1;
+    margin-left: 20px;
+    padding: 20px;
+}
+
+/* New sidebar styles */
+.sidebar-secondary {
+    width: 200px;
+    background-color:white; 
+	color : black;
+    padding: 20px 10px;
+}
