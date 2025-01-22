@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        @keyframes shrinkFall {
+            0% {
+                font-size: 48px;
+                color: red;
+                transform: translateY(0vh));
+            }
+            50% {
+                font-size: 36px;
+                color: blue;
+                transform: translateY(30vh) ;
+            }
+            75% {
+                font-size: 42px;
+                color: green;
+                transform: translateY(60vh) ;
+            }
+            100% {
+                font-size: 48px;
+                color: purple;
+                transform: translateY(90vh) ;
+            }
+        }
+
+        .title {
+		    text-align : center;
+            display: inline-block;
+			right: 50%;
+			position: absolute;
+            animation: shrinkFall 5s infinite;
+			}
+	
+		
+    </style>
+</head>
+<body>
+    <h1 class="title">Falling Title</h1>
+	<div class="ball"></div>
+</body>
+</html>
